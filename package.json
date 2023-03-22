@@ -1,45 +1,50 @@
 {
-   "name": "myskin",
-   "version": "0.0.1",
-   "description": "Awesome project developed with TypeORM.",
-   "type": "commonjs",
-   "scripts": {
-      "start": "ts-node src/index.ts",
-      "typeorm": "typeorm-ts-node-commonjs",
-      "start1": "pm2 start ecosystem.config.js",
-      "restart": "pm2 restart ecosystem.config.js",
-      "reload": "pm2 reload ecosystem.config.js",
-      "stop": "pm2 stop ecosystem.config.js",
-      "logs": "pm2 logs ghauth",
-      "monit": "pm2 monit ecosystem.config.js",
-      "helper": "node ./src/install/install.js",
-      "dev": "nodemon -i ./test/",
-      "prepare": "husky install",
-      "lint": "eslint ./ --fix",
-      "format": "prettier . --write"
-   },
-   "devDependencies": {
-      "ts-node": "10.7.0",
-      "@types/node": "^16.11.10",
-      "typescript": "4.5.2",
-      "nodemon": "^2.0.21"
-   },
-   "dependencies": {
-      "typeorm": "0.3.12",
-      "reflect-metadata": "^0.1.13",
-      "sqlite3": "^5.0.2",
-      "uuid": "^9.0.0",
-      "colors": "^1.4.0",
-      "js-yaml": "^4.1.0",
-      "koa": "^2.14.1",
-      "koa-bodyparser": "^4.4.0",
-      "koa-logger": "^3.2.1",
-      "koa-router": "^12.0.0",
-      "koa-session": "^6.4.0",
-      "koa-static-cache": "^5.1.4",
-      "koa-views": "^8.0.0",
-      "node-gyp": "^9.3.1",
-      "pm2": "^5.3.0",
-      "pug": "^3.0.2"
-   }
+  "name": "my-midway-project",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "dependencies": {
+    "@midwayjs/bootstrap": "^3.0.0",
+    "@midwayjs/core": "^3.0.0",
+    "@midwayjs/decorator": "^3.0.0",
+    "@midwayjs/info": "^3.0.0",
+    "@midwayjs/koa": "^3.0.0",
+    "@midwayjs/logger": "^2.14.0",
+    "@midwayjs/validate": "^3.0.0"
+  },
+  "devDependencies": {
+    "@midwayjs/cli": "^2.0.0",
+    "@midwayjs/mock": "^3.0.0",
+    "@types/jest": "^29.2.0",
+    "@types/koa": "^2.13.4",
+    "@types/node": "14",
+    "cross-env": "^6.0.0",
+    "jest": "^29.2.2",
+    "mwts": "^1.0.5",
+    "ts-jest": "^29.0.3",
+    "typescript": "~4.8.0"
+  },
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "scripts": {
+    "start": "NODE_ENV=production node ./bootstrap.js",
+    "dev": "cross-env NODE_ENV=local midway-bin dev --ts",
+    "test": "midway-bin test --ts",
+    "cov": "midway-bin cov --ts",
+    "lint": "mwts check",
+    "lint:fix": "mwts fix",
+    "ci": "npm run cov",
+    "build": "midway-bin build -c"
+  },
+  "midway-bin-clean": [
+    ".vscode/.tsbuildinfo",
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "author": "anonymous",
+  "license": "MIT"
 }
