@@ -18,7 +18,7 @@ export class SkinEntity {
 
   @OneToOne(() => UserEntity)
   @JoinColumn()
-  uploader: bigint;//上传者id
+  uploader: number;//上传者id
 
   @Column({
     default: ""

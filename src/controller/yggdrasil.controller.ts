@@ -2,6 +2,7 @@ import {Body, Config, ContentType, Controller, Get, Inject, Post, Query} from '@
 import {Context} from '@midwayjs/koa';
 import {UserService} from '../service/user.service';
 import {Response} from "../util/response";
+import {TokenService} from "../service/token.service";
 
 const pkg = require('../../package.json');
 
@@ -14,6 +15,9 @@ export class YggdrasilController {
   //注入操作
   @Inject()
   userService: UserService;
+
+  @Inject()
+  tokenService: TokenService;
   //注入配置
   @Config('common')
   common;
@@ -51,21 +55,21 @@ export class YggdrasilController {
   @Post('/authserver/refresh')
   async refresh(@Body() data) {
     if (!data.accessToken) {
-      Response(this.ctx).invalidToken()
-      return
+      Response(this.ctx).invalidToken();
+      return;
     }
 
-    const {accessToken} = data
-    const {clientToken} = data
-    const requestUser = data.requestUser || false
+    const {accessToken} = data;
+    const {clientToken} = data;
+    const requestUser = data.requestUser || false;
 
     // 刷新令牌
-    const result = await stoken.refreshAccessToken(accessToken, clientToken).then((ret) => ret)
+    const result = await this.tokenService.refreshAccessToken(accessToken, clientToken).then((ret) => ret);
 
     // 刷新操作失败
     if (!result) {
-      Response(this.ctx).invalidToken()
-      return
+      Response(this.ctx).invalidToken();
+      return;
     }
 
     const profileData = {
@@ -84,7 +88,7 @@ export class YggdrasilController {
         id: result.uuid.replace(/-/g, '')
       }
     }
-    Response(this.ctx).success(responseData)
+    Response(this.ctx).success(responseData);
   }
 
 
