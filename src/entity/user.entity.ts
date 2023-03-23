@@ -3,13 +3,14 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import {IpEntity} from './ip.entity';
 import {SkinEntity} from './skin.entity';
-import {TokenEntity} from './token.entity';
+import {TokenEntity} from "./token.entity";
 
 @Entity()
 export class UserEntity {
@@ -29,24 +30,23 @@ export class UserEntity {
   email: string;
 
   @Column()
-  score: bigint;
+  score: number;
 
   @Column({
     default: 1          //0-封禁 1-游客 2-验证用户 99-超级管理员
   })
-  permission: bigint;
+  permission: number;
 
   @OneToOne(() => SkinEntity)
   @JoinColumn()
   skin: SkinEntity;
 
-  @OneToOne(() => TokenEntity)
-  @JoinColumn()
-  token: TokenEntity;
-
   @OneToOne(() => IpEntity)
   @JoinColumn()
   ip: IpEntity;
+
+  @OneToMany(type => TokenEntity, token => token.user)
+  tokens: TokenEntity[];
 
   @CreateDateColumn()
   register: number;

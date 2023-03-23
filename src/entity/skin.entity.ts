@@ -28,7 +28,7 @@ export class SkinEntity {
   @Column({
     default: 0
   })
-  like: bigint;//点赞数
+  like: number;//点赞数
 
   @CreateDateColumn()
   uploadTime: number;

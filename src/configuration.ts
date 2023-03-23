@@ -7,12 +7,14 @@ import {join} from 'path';
 // import { NotFoundFilter } from './filter/notfound.filter';
 import {ReportMiddleware} from './middleware/report.middleware';
 import * as orm from '@midwayjs/typeorm';
+import * as redis from '@midwayjs/redis';
 
 @Configuration({
   imports: [
     koa,
     validate,
     orm,
+    redis,
     {
       component: info,
       enabledEnvironment: ['local'],
