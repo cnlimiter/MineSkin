@@ -28,15 +28,13 @@ export class UserEntity {
   @Column()
   email: string;
 
-  @Column({
-    default: false,
-  })
-  verified: boolean;
+  @Column()
+  score: bigint;
 
   @Column({
-    default: false,
+    default: 1          //0-封禁 1-游客 2-验证用户 99-超级管理员
   })
-  isBanned: boolean;
+  permission: bigint;
 
   @OneToOne(() => SkinEntity)
   @JoinColumn()

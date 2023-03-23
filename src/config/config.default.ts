@@ -55,11 +55,11 @@ export default {
     //加句点.能够使用泛域(如.example2.com)
     skinDomains: [],
     signature: {
-      private: '|-\n' +
+      private:
         '      -----BEGIN RSA PRIVATE KEY-----\n' +
         '      私钥\n' +
         '-----END RSA PRIVATE KEY-----',
-      public: '|-\n' +
+      public:
         '  -----BEGIN PUBLIC KEY-----\n' +
         '  公钥\n' +
         '-----END PUBLIC KEY-----'
