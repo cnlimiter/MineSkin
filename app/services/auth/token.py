@@ -1,0 +1,94 @@
+import datetime
+import uuid
+from typing import List
+
+from app.exceptions.exception import AuthenticationError
+from app.models.player import Player
+from app.models.token import Token
+from app.models.user import User
+from app.schemas.authenticate import AuthResponse, TokenBase
+
+
+def gen_access_token(email: str, client_token: str) -> str:
+    user = User.get_or_none(User.email == email)
+    if user & user.permission != -1:
+        tokens: List[Token] = Token.select().where(Token.user_id == user.user_id)
+        for i in tokens:
+            i.status = 0
+        for i in tokens:
+            if datetime.datetime.now() - i.created_at.to_timestamp() >= 432000000:
+                Token.delete_by_id(i.token_id)
+
+        new_token = TokenBase()
+        new_token.access_token = uuid.uuid4().hex
+        new_token.client_token = client_token
+        Token.create(user_id=user.user_id, client_token=new_token.client_token, access_token=new_token.access_token)
+        return new_token.access_token
+    else:
+        raise AuthenticationError(message="用户已封禁或不存在")
+
+
+def search_user_by_access_token(access_token: str) -> User:
+    token = Token.get_or_none(access_token=access_token)
+    return User.get_by_id(token.user_id)
+
+
+def refresh_access_token(access_token: str, client_token: str):
+    token: Token
+    tokens: List[Token] = Token.select().where(Token.access_token == access_token)
+    for i in tokens:
+        user: User = User.get_by_id(i.user_id)
+        if user & user.permission != -1:
+            if datetime.datetime.now() - i.created_at.to_timestamp() >= 432000000:
+                Token.delete_by_id(i.token_id)
+                break
+            if not i.access_token == access_token:
+                break
+
+            if not i.client_token == client_token:
+                break
+
+            token = i
+            token.status = 1
+
+            return {
+                "accessToken": token.access_token,
+                "clientToken": token.clientToken,
+                "uuid": user.uuid,
+                "playername": user.username
+            }
+
+        else:
+            raise AuthenticationError(message='用户已封禁或不存在')
+
+
+def validate_access_token(access_token: str, client_token: str) -> bool:
+    tokens: List[Token] = Token.select().where(Token.access_token == access_token)
+    for i in tokens:
+        user: User = User.get_by_id(i.user_id)
+        if user & user.permission != -1:
+            # accessToken已过期
+            if datetime.datetime.now() - i.created_at.to_timestamp() >= 432000000:
+                Token.delete_by_id(i.token_id)
+                break
+
+            # 未找到指定accessToken
+            if not i.access_token:
+                break
+
+            if not i.access_token == access_token:
+                break
+
+            # clientToken不匹配
+            if not i.client_token == client_token:
+                break
+            # accessToken暂时失效
+            if not i.status == 1:
+                break
+
+            return True
+
+        else:
+            return False
+
+    return False
