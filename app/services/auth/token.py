@@ -6,7 +6,7 @@ from app.exceptions.exception import AuthenticationError
 from app.models.player import Player
 from app.models.token import Token
 from app.models.user import User
-from app.schemas.authenticate import AuthResponse, TokenBase
+from app.schemas.auth import AuthResponse, TokenBase
 
 
 def gen_access_token(email: str, client_token: str) -> str:
@@ -92,3 +92,31 @@ def validate_access_token(access_token: str, client_token: str) -> bool:
             return False
 
     return False
+
+
+def invalidate_access_token(access_token: str) -> bool:
+    token: Token = Token.get_or_none(Token.access_token == access_token)
+    user: User = User.get_by_id(token.user_id)
+    if user & user.permission != -1:
+        if not token.access_token:
+            return False
+        Token.delete_by_id(token.token_id)
+        return True
+    return False
+
+
+def invalidate_all_access_token(email: str, password: str) -> bool:
+    user: User = User.get_or_none(User.email == email)
+    if user & user.permission != -1:
+        tokens: List[Token] = Token.select().where(Token.user_id == user.user_id)
+        # 密码不正确
+        if not password == user.password:
+            return False
+
+        # 遍历所有token并删除
+        for i in tokens:
+            Token.delete_by_id(i.token_id)
+
+        return True
+    else:
+        return False
