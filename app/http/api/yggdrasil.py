@@ -3,9 +3,16 @@ from fastapi import APIRouter
 from app.support.helper import load_key
 from config.api import settings as api_config
 
+from fastapi import APIRouter, Depends
+
+from app.http.deps import get_db
+from app.schemas.auth import AuthRequest, AuthResponse, RefreshRequest, RefreshResponse, TokenBase, AuthBase
+from app.services.auth.grant import Password, Refresh, Validate, InValidate, SignOut
+
 router = APIRouter(
     prefix="/yggdrasil"
 )
+
 
 @router.get("/")
 def main():
@@ -26,3 +33,48 @@ def main():
         "skinDomains": api_config.DOMAINS,
         "signaturePublickey": load_key()
     }
+
+
+@router.post("/authserver/authenticate", response_model=AuthResponse, dependencies=[Depends(get_db)])
+async def authenticate(request_data: AuthRequest):
+    """
+    使用密码进行身份验证，并分配一个新的令牌。
+    """
+    r = Password(request_data)
+    return r.respond()
+
+
+@router.post("/authserver/refresh", response_model=RefreshResponse, dependencies=[Depends(get_db)])
+async def refresh(request_data: RefreshRequest):
+    """
+    吊销原令牌，并颁发一个新的令牌。
+    """
+    r = Refresh(request_data)
+    return r.respond()
+
+
+@router.post("/authserver/validate", dependencies=[Depends(get_db)])
+async def validate(request_data: TokenBase):
+    """
+    检验令牌是否有效。
+    """
+    r = Validate(request_data)
+    return r.respond()
+
+
+@router.post("/authserver/invalidate", dependencies=[Depends(get_db)])
+async def invalidate(access_token: str):
+    """
+    检验令牌是否有效。
+    """
+    r = InValidate(access_token)
+    return r.respond()
+
+
+@router.post("/authserver/signout", dependencies=[Depends(get_db)])
+async def signout(request_data: AuthBase):
+    """
+    吊销用户的所有令牌。
+    """
+    r = SignOut(request_data)
+    return r.respond()

@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -10,7 +10,7 @@ class Properties(BaseModel):
 
 class User(BaseModel):
     id: str
-    properties: List[Properties]
+    properties: Optional[List[Properties]] = None
 
 
 class ProfileData(BaseModel):

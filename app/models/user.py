@@ -13,7 +13,7 @@ class User(BaseModel):
     email = CharField(unique=True)
     password = CharField()
     score = IntegerField(default=0)
-    avatar = CharField()
+    avatar = CharField(null=True)
     permission = IntegerField(default=0)
 
     def is_enabled(self):

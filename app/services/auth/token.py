@@ -3,25 +3,26 @@ import uuid
 from typing import List
 
 from app.exceptions.exception import AuthenticationError
-from app.models.player import Player
 from app.models.token import Token
 from app.models.user import User
-from app.schemas.auth import AuthResponse, TokenBase
+from app.schemas.auth import TokenBase
 
 
-def gen_access_token(email: str, client_token: str) -> str:
-    user = User.get_or_none(User.email == email)
-    if user & user.permission != -1:
+def gen_access_token(username: str, client_token: str) -> str:
+    user = User.get_or_none(User.username == username)
+    if user and user.permission != -1:
         tokens: List[Token] = Token.select().where(Token.user_id == user.user_id)
+
         for i in tokens:
             i.status = 0
-        for i in tokens:
-            if datetime.datetime.now() - i.created_at.to_timestamp() >= 432000000:
-                Token.delete_by_id(i.token_id)
 
-        new_token = TokenBase()
-        new_token.access_token = uuid.uuid4().hex
-        new_token.client_token = client_token
+        # for i in tokens:
+        #     if datetime.datetime.utcnow().timestamp() - i.created_at >= 432000000:
+        #         Token.delete_by_id(i.token_id)
+
+        new_token = TokenBase(access_token=uuid.uuid4().hex, client_token=client_token)
+        # new_token.access_token = uuid.uuid4().hex
+        # new_token.client_token = client_token
         Token.create(user_id=user.user_id, client_token=new_token.client_token, access_token=new_token.access_token)
         return new_token.access_token
     else:
@@ -38,8 +39,8 @@ def refresh_access_token(access_token: str, client_token: str):
     tokens: List[Token] = Token.select().where(Token.access_token == access_token)
     for i in tokens:
         user: User = User.get_by_id(i.user_id)
-        if user & user.permission != -1:
-            if datetime.datetime.now() - i.created_at.to_timestamp() >= 432000000:
+        if user and user.permission != -1:
+            if datetime.datetime.utcnow().timestamp() - i.created_at >= 432000000:
                 Token.delete_by_id(i.token_id)
                 break
             if not i.access_token == access_token:
@@ -66,9 +67,9 @@ def validate_access_token(access_token: str, client_token: str) -> bool:
     tokens: List[Token] = Token.select().where(Token.access_token == access_token)
     for i in tokens:
         user: User = User.get_by_id(i.user_id)
-        if user & user.permission != -1:
+        if user and user.permission != -1:
             # accessToken已过期
-            if datetime.datetime.now() - i.created_at.to_timestamp() >= 432000000:
+            if datetime.datetime.utcnow().timestamp() - i.created_at >= 432000000:
                 Token.delete_by_id(i.token_id)
                 break
 
@@ -97,7 +98,7 @@ def validate_access_token(access_token: str, client_token: str) -> bool:
 def invalidate_access_token(access_token: str) -> bool:
     token: Token = Token.get_or_none(Token.access_token == access_token)
     user: User = User.get_by_id(token.user_id)
-    if user & user.permission != -1:
+    if user and user.permission != -1:
         if not token.access_token:
             return False
         Token.delete_by_id(token.token_id)
@@ -105,9 +106,9 @@ def invalidate_access_token(access_token: str) -> bool:
     return False
 
 
-def invalidate_all_access_token(email: str, password: str) -> bool:
-    user: User = User.get_or_none(User.email == email)
-    if user & user.permission != -1:
+def invalidate_all_access_token(username: str, password: str) -> bool:
+    user: User = User.get_or_none(User.username == username)
+    if user and user.permission != -1:
         tokens: List[Token] = Token.select().where(Token.user_id == user.user_id)
         # 密码不正确
         if not password == user.password:

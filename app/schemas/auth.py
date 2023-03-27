@@ -1,32 +1,42 @@
 from typing import Optional, Union, List
 
 from pydantic import BaseModel
-from user import User
-from player import Player
+
+from app.schemas.player import Player
+from app.schemas.user import User
 
 
 class Agent(BaseModel):
     name: str
     version: int
 
+    class Config:
+        orm_mode = True
+
 
 class TokenBase(BaseModel):
     access_token: str
     client_token: str
+
+    class Config:
+        orm_mode = True
 
 
 class AuthBase(BaseModel):
     username: str
     password: str
 
+    class Config:
+        orm_mode = True
+
 
 class RefreshResponse(TokenBase):
-    selectedProfile: Player
-    user: User
+    selectedProfile: Optional[Player] = None
+    user: Optional[User] = None
 
 
 class AuthResponse(RefreshResponse):
-    availableProfiles: List[Player]
+    availableProfiles: Optional[List[Player]] = None
 
 
 class AuthRequest(AuthBase):

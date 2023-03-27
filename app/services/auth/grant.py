@@ -1,3 +1,5 @@
+from typing import List
+
 from starlette.responses import JSONResponse
 
 from app.exceptions.exception import AuthenticationError, InvalidCredentialsError, InvalidTokenError
@@ -28,19 +30,16 @@ class Password:
             raise InvalidCredentialsError(message='Inactive user')
 
         access_token = TokenService.gen_access_token(self.request_data.username, self.request_data.client_token)
-        profile_data = PlayerRes()
-        profile_data.id = user.uuid
-        profile_data.name = user.username
+        profile_data = PlayerRes(id=user.uuid, name=user.username)
 
-        response_data = AuthResponse()
-        response_data.access_token = access_token
-        response_data.client_token = self.request_data.client_token
-        response_data.availableProfiles.append(profile_data)
+        response_data = AuthResponse(access_token=access_token, client_token=self.request_data.client_token,
+                                     availableProfiles=[profile_data]
+                                     )
+
         response_data.selectedProfile = profile_data
 
         if self.request_data.request_user:
-            s_user = UserRes()
-            s_user.id = user.uuid
+            s_user = UserRes(id=user.uuid)
             response_data.user = s_user
 
         return response_data
@@ -61,18 +60,14 @@ class Refresh:
         if not token:
             raise InvalidTokenError(message='未知的令牌')
 
-        profile_data = Player()
-        profile_data.id = token.get("uuid")
-        profile_data.name = token.get("playername")
+        profile_data = Player(id=token.get("uuid"), name=token.get("playername"))
 
-        response_data = RefreshResponse()
-        response_data.access_token = token.get("access_token")
-        response_data.client_token = token.get("client_token")
+        response_data = RefreshResponse(access_token=token.get("access_token"), client_token=token.get("client_token"))
+
         response_data.selectedProfile = profile_data
 
         if request_user:
-            r_user = UserRes()
-            r_user.id = token.get("uuid")
+            r_user = UserRes(id=token.get("uuid"))
             response_data.user = r_user
 
         return response_data
@@ -126,7 +121,7 @@ class SignOut:
         username = self.data.username
         password = hashing.get_password_hash(self.data.password)
 
-        result = TokenService.invalidate_all_access_token(email=username, password=password)
+        result = TokenService.invalidate_all_access_token(username=username, password=password)
 
         if not result:
             raise InvalidCredentialsError()
