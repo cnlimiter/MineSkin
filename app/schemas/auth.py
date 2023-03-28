@@ -1,5 +1,6 @@
 from typing import Optional, Union, List
 
+from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import BaseModel
 
 from app.schemas.player import Player
@@ -17,9 +18,14 @@ class Agent(BaseModel):
 class TokenBase(BaseModel):
     access_token: str
     client_token: str
+    token_type: Optional[str] = 'bearer'
 
     class Config:
         orm_mode = True
+
+
+class TokenData(BaseModel):
+    username: Union[str, None] = None
 
 
 class AuthBase(BaseModel):
@@ -39,7 +45,7 @@ class AuthResponse(RefreshResponse):
     availableProfiles: Optional[List[Player]] = None
 
 
-class AuthRequest(AuthBase):
+class AuthRequest(OAuth2PasswordRequestForm):
     client_token: Optional[str] = None
     request_user: Optional[bool] = False
 

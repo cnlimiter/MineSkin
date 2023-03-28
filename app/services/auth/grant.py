@@ -1,13 +1,58 @@
 from typing import List
 
+from fastapi import Depends, HTTPException
+from fastapi.security import OAuth2PasswordBearer
+from jose import jwt, JWTError
+from starlette import status
 from starlette.responses import JSONResponse
 
 from app.exceptions.exception import AuthenticationError, InvalidCredentialsError, InvalidTokenError
 from app.models.user import User
-from app.schemas.auth import AuthRequest, AuthResponse, RefreshRequest, RefreshResponse, TokenBase, AuthBase
+from app.schemas.auth import AuthRequest, AuthResponse, RefreshRequest, RefreshResponse, TokenBase, AuthBase, TokenData
 from app.schemas.player import Player as PlayerRes, Player
 from app.schemas.user import User as UserRes, ProfileData
 from app.services.auth import hashing as PwdService, token as TokenService, hashing
+from app.services.auth.hashing import verify_password
+from config.config import settings
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="authserver/authenticate")
+
+
+def fake_decode_token(username: str, password: str):
+    # This doesn't provide any security at all
+    # Check the next version
+    user = User.get_or_none(User.username, username)
+    if not user:
+        return False
+    if not verify_password(password, user.hashed_password):
+        return False
+    return user
+
+
+async def get_current_user(token: str = Depends(oauth2_scheme)):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, settings.JWT_SECRET_KEY, algorithms=[settings.JWT_ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None:
+            raise credentials_exception
+        token_data = TokenData(username=username)
+    except JWTError:
+        raise credentials_exception
+    user = User.get_or_none(User.username, username=token_data.username)
+    if user is None:
+        raise credentials_exception
+    return user
+
+
+async def get_current_active_user(current_user: User = Depends(get_current_user)):
+    if current_user.disabled:
+        raise HTTPException(status_code=400, detail="Inactive user")
+    return current_user
 
 
 class Password:
@@ -19,10 +64,11 @@ class Password:
         if not user:
             raise InvalidCredentialsError(message='User not exist')
 
-        password = hashing.get_password_hash(user.password)
+        password = hashing.get_password_hash(self.request_data.password)
 
+        print(password)
         # 用户密码校验
-        if not (user.password and PwdService.verify_password(self.request_data.password, password)):
+        if not (user.password and PwdService.verify_password(user.password, password)):
             raise InvalidCredentialsError(message='Incorrect email or password')
 
         # 用户状态校验
