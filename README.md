@@ -1,16 +1,16 @@
-这是一个开箱即用的FastAPI脚手架，集成了ORM模型、JWT认证、日志系统、异常处理、路由注册、系统配置、调度任务等常用的模块。
+# MineSkin
+
 
 ## 设计思想
 
 - 层级结构清晰
 - 简洁优雅
-- 易于扩展
-- 开箱即用
+
 
 ## 项目结构
 
 ```
-/kaxiluo/fastapi-skeleton/
+/cnlimiter/MineSkin-fastapi/
 |-- app
 |   |-- commands                                ----- 放置一些命令行
 |   |   `-- __init__.py
@@ -50,7 +50,6 @@
 |   |   |   |-- grant.py                        ----- 认证核心类
 |   |   |   |-- hashing.py
 |   |   |   |-- jwt_helper.py
-|   |   |   |-- oauth2_schema.py
 |   |   |   `-- random_code_verifier.py
 |   |   `-- __init__.py
 |   |-- support                                 ----- 公共方法
@@ -68,7 +67,7 @@
 |   `-- logging.py                              ----- 日志配置
 |-- database
 |   `-- migrations                              ----- 初始化SQL
-|       `-- 2022_09_07_create_users_table.sql
+|       `-- 
 |-- routes                                      ----- 路由目录
 |   |-- __init__.py
 |   `-- api.py                                  ----- api路由
@@ -108,11 +107,7 @@
 
 - JWT认证
 
-默认提供了账号密码和手机号验证码两种认证方式。框架易于扩展新的认证方式。
-
-测试登录认证请先执行初始化的SQL：`fastapi-skeleton/database/migrations/*.sql`
-
-注：验证码的存储和校验方法请自行实现
+默认提供了账号密码和认证方式。框架易于扩展新的认证方式。
 
 - 调度任务
 
@@ -120,13 +115,6 @@
 
 注：定时任务与api是分开启动的
 
-## 运行
-
-1. 执行初始化SQL：`/database/migrations/2022_09_07_create_users_table.sql`
-
-2. API：`main.py`
-
-3. 调度器： `scheduler.py`
 
 ## 参考
 
