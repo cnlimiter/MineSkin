@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from fastapi.security import OAuth2PasswordRequestForm
 
 from app.support.helper import load_key
 from config.api import settings as api_config
@@ -7,7 +8,7 @@ from fastapi import APIRouter, Depends
 
 from app.http.deps import get_db
 from app.schemas.auth import AuthRequest, AuthResponse, RefreshRequest, RefreshResponse, TokenBase, AuthBase
-from app.services.auth.grant import Password, Refresh, Validate, InValidate, SignOut, get_current_active_user
+from app.services.auth.grant import Password, Refresh, Validate, InValidate, SignOut
 
 router = APIRouter(
     prefix="/yggdrasil"
@@ -36,18 +37,26 @@ def main():
 
 
 @router.post("/authserver/authenticate", response_model=AuthResponse, dependencies=[Depends(get_db)])
-async def authenticate(request_data: AuthRequest = Depends()):
+async def authenticate(request_data: AuthRequest= Depends()):
     """
     使用密码进行身份验证，并分配一个新的令牌。
     """
     r = Password(request_data)
     return r.respond()
 
-@router.get("/users/me/", response_model=User)
-async def read_users_me(current_user: User = Depends(get_current_active_user)):
-    return current_user
 
-
+@router.post("/login")
+def login(form_data: OAuth2PasswordRequestForm = Depends()):
+    data = form_data
+    print(data.username)
+    print(data.password)
+    for scope in data.scopes:
+        print(scope)
+    if data.client_id:
+        print(data.client_id)
+    if data.client_secret:
+        print(data.client_secret)
+    return data
 
 @router.post("/authserver/refresh", response_model=RefreshResponse, dependencies=[Depends(get_db)])
 async def refresh(request_data: RefreshRequest):

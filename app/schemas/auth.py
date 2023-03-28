@@ -7,6 +7,15 @@ from app.schemas.player import Player
 from app.schemas.user import User
 
 
+class OAuth2PasswordRequest(BaseModel):
+    grant_type: Optional[str] = 'password'
+    username: str
+    password: str
+    scope: Optional[str] = ''
+    client_id: Optional[str] = None
+    client_secret: Optional[str] = None
+
+
 class Agent(BaseModel):
     name: str
     version: int
@@ -45,7 +54,7 @@ class AuthResponse(RefreshResponse):
     availableProfiles: Optional[List[Player]] = None
 
 
-class AuthRequest(OAuth2PasswordRequestForm):
+class AuthRequest(OAuth2PasswordRequest):
     client_token: Optional[str] = None
     request_user: Optional[bool] = False
 

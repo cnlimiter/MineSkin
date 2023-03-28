@@ -16,9 +16,9 @@ def gen_access_token(username: str, client_token: str) -> str:
         for i in tokens:
             i.status = 0
 
-        # for i in tokens:
-        #     if datetime.datetime.utcnow().timestamp() - i.created_at >= 432000000:
-        #         Token.delete_by_id(i.token_id)
+        for i in tokens:
+            if datetime.datetime.utcnow().timestamp() - i.created_at.timestamp() >= 432000000:
+                Token.delete_by_id(i.token_id)
 
         new_token = TokenBase(access_token=uuid.uuid4().hex, client_token=client_token)
         # new_token.access_token = uuid.uuid4().hex

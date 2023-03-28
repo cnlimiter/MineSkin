@@ -8,16 +8,21 @@ from app.services.auth import hashing
 if __name__ == "__main__":
     get_db()
     password = hashing.get_password_hash("123456")
-    tokens = Token.select().where(Token.user_id == 1)
+    tokens = Token.select().where(Token.user_id == 2)
+    token = Token.get_or_none(Token.token_id == 2)
     user = User.get_or_none(User.username == 'cnlimiter')
 
+    result = hashing.verify_password('123456', user.password)
+
+    now = datetime.datetime.now().timestamp()
     # if tokens:
     #     print(True)
     # else:
     #     print(False)
     # for i in tokens:
     #     print(i.token_id)
+    print(now)
 
-    # print(user.password)
-    print(datetime.datetime.utcnow().timestamp()-user.created_at)
+    print(token.created_at.timestamp())
+    #print(datetime.datetime.utcnow().timestamp()-user.created_at)
     #for i in tokens:
