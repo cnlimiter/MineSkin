@@ -1,7 +1,7 @@
 import uvicorn
 
 from bootstrap.application import create_app
-from config.config import settings as app_config
+from config.app import settings as app_config
 
 app = create_app()
 

@@ -12,6 +12,7 @@ from app.schemas.auth import AuthRequest, AuthResponse, RefreshRequest, RefreshR
 from app.schemas.player import Player as PlayerRes, Player
 from app.schemas.user import User as UserRes
 from app.services.auth import hashing as PwdService, token as TokenService, hashing
+from app.support.helper import numeric_random
 
 
 class Password:
@@ -32,9 +33,8 @@ class Password:
             raise InvalidCredentialsError(message='Inactive user')
 
         if self.request_data.client_token is None:
-            self.request_data.client_token = uuid.uuid4().hex
+            self.request_data.client_token = numeric_random()
 
-        print(self.request_data.client_token)
         access_token = TokenService.gen_access_token(self.request_data.username, self.request_data.client_token)
         profile_data = PlayerRes(id=user.uuid, name=user.username)
 

@@ -1,5 +1,5 @@
 from pydantic import BaseSettings
-from config.config import settings as app_settings
+from app.config import settings as app_settings
 
 """
 配置参考loguru

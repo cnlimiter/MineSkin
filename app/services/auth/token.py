@@ -121,3 +121,15 @@ def invalidate_all_access_token(username: str, password: str) -> bool:
         return True
     else:
         return False
+
+
+def client_to_server_validate(access_token: str, selected_profile: str, server_id: str, ip: str):
+    token: Token = Token.get_or_none(Token.access_token == access_token)
+    user: User = User.get_by_id(token.user_id)
+
+    if not user:
+        return False
+
+    if user.permission == 1:
+        return False
+

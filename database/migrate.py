@@ -2,7 +2,7 @@ from peewee_migrate import Router
 
 from app.models import user, skin, player, token
 from app.providers.database import db
-from config import config
+from config import app
 
 
 def gen():

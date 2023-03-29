@@ -1,7 +1,7 @@
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.providers.database import db
-from config.config import settings
+from config.app import settings
 
 
 def register(app):
