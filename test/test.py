@@ -1,9 +1,11 @@
 import datetime
 import json
+import uuid
 
 from app.http.deps import get_db
 from app.models.token import Token
 from app.models.user import User
+from app.schemas.texture import Texture, SkinInfo
 from app.services.auth import hashing
 
 if __name__ == "__main__":
@@ -25,15 +27,30 @@ if __name__ == "__main__":
     }
     dump = json.dumps(data)
 
+    texture = SkinInfo(
+        url="111",
+        metadata={
+            'model': 'default'
+        }
+    )
+
+    texture_data = Texture(
+        timestamp=datetime.datetime.now(),
+        profileId='1',
+        profileName='1',
+        textures={
+            "SKIN": texture
+        }
+    )
+
     # if tokens:
     #     print(True)
     # else:
     #     print(False)
     # for i in tokens:
     #     print(i.token_id)
-    print(dump)
-    print(json.loads(dump))
-
+    # print(base64.b64encode(data.__str__().encode('utf-8')))
+    print(len(uuid.uuid4().hex))
     # print(token.created_at.timestamp())
     # print(datetime.datetime.utcnow().timestamp()-user.created_at)
     # for i in tokens:

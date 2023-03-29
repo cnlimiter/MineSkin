@@ -1,9 +1,8 @@
 from peewee_migrate import Router
 
-from app.models import user, skin, player, token
+from app.models import user, skin, player
 from app.providers.database import db
-from config import app
-
+from config.app import settings as AppConfig
 
 def gen():
     with db:
@@ -16,7 +15,7 @@ def gen():
 def run():
     with db:
         router = Router(db)
-        router.run(config.settings.BASE_PATH + '\\database\\migrations\\004_token.py')
+        router.run(AppConfig.BASE_PATH + '\\database\\migrations\\004_token.py')
 
 
 if __name__ == "__main__":

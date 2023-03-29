@@ -6,11 +6,11 @@ from pydantic import BaseModel
 
 class SkinInfo(BaseModel):
     url: str
-    metadata: Union[str, str]
+    metadata: dict[str, str]
 
 
 class Texture(BaseModel):
     timestamp: datetime.datetime
     profileId: str
     profileName: str
-    textures: Union[str, SkinInfo]
+    textures: dict[str, SkinInfo]

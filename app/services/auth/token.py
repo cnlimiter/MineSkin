@@ -8,6 +8,7 @@ from app.models.token import Token
 from app.models.user import User
 from app.providers.database import redis
 from app.schemas.auth import TokenBase
+from app.schemas.player import Player
 from app.services.auth.user import gen_user_profile
 from config.auth import settings as AuthConfig
 
@@ -158,7 +159,7 @@ def client_to_server_validate(access_token: str, selected_profile: str, server_i
     return redis.set(f'server_id_{server_id}', json.dumps(data), ex=15)
 
 
-def server_to_client_validate(username: str, server_id: str, ip: str) -> bool | None:  # todo
+def server_to_client_validate(username: str, server_id: str, ip: str) -> bool | Player:
     # 根据serverId获取对应授权信息
     response = redis.get(f'server_id_{server_id}')
     # 未找到对应授权信息或发生错误
