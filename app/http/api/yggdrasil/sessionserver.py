@@ -4,7 +4,7 @@ from starlette.requests import Request
 from app.http.deps import get_db
 from app.schemas.game import JoinRequest
 from app.schemas.player import Player
-from app.services.auth.session_service import Join, HasJoined, Profile
+from app.services.yggdrasil.session_service import Join, HasJoined, Profile
 
 router = APIRouter(
     prefix="/yggdrasil/sessionserver/session/minecraft"

@@ -8,7 +8,7 @@ from app.exceptions.exception import AuthenticationError
 from app.models.user import User
 from app.providers import database
 from app.schemas.auth import TokenData, AuthRequest
-from app.services.auth import jwt_helper
+from app.services.util import jwt_helper
 
 oauth2_token_schema = OAuth2PasswordBearer(
     tokenUrl="token"
@@ -44,8 +44,8 @@ def get_db():
             database.db.close()
 
 
-from app.services.auth.hashing import verify_password
-from app.services.auth.jwt_helper import get_payload_by_token
+from app.services.util.hashing import verify_password
+from app.services.util.jwt_helper import get_payload_by_token
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="authserver/authenticate")
 

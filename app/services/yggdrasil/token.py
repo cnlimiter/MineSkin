@@ -9,7 +9,7 @@ from app.models.user import User
 from app.providers.database import redis
 from app.schemas.auth import TokenBase
 from app.schemas.player import Player
-from app.services.auth.user import gen_user_profile
+from app.services.yggdrasil.user_profile import gen_user_profile
 from config.auth import settings as AuthConfig
 
 

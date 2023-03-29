@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 
 from app.http.deps import get_db
 from app.schemas.auth import AuthRequest, AuthResponse, RefreshRequest, RefreshResponse, TokenBase, AuthBase
-from app.services.auth.auth_service import Password, Refresh, Validate, InValidate, SignOut
+from app.services.yggdrasil.auth_service import Password, Refresh, Validate, InValidate, SignOut
 
 router = APIRouter(
     prefix="/yggdrasil/authserver"

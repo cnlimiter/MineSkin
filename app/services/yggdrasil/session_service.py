@@ -3,7 +3,7 @@ from starlette.requests import Request
 from app.models.user import User
 from app.schemas.game import JoinRequest
 from app.schemas.player import Player
-from app.services.auth.token import client_to_server_validate, server_to_client_validate
+from app.services.yggdrasil.token import client_to_server_validate, server_to_client_validate
 from app.support.response_json import YggdrasilResponse
 
 

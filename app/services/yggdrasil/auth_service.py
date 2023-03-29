@@ -1,17 +1,12 @@
-import uuid
-
-from fastapi import Depends, HTTPException
-from fastapi.security import OAuth2PasswordBearer
-from jose import JWTError
-from starlette import status
 from starlette.responses import JSONResponse
 
 from app.exceptions.exception import InvalidCredentialsError, InvalidTokenError
 from app.models.user import User
-from app.schemas.auth import AuthRequest, AuthResponse, RefreshRequest, RefreshResponse, TokenBase, AuthBase, TokenData
+from app.schemas.auth import AuthRequest, AuthResponse, RefreshRequest, RefreshResponse, TokenBase, AuthBase
 from app.schemas.player import Player as PlayerRes, Player
 from app.schemas.user import User as UserRes
-from app.services.auth import hashing as PwdService, token as TokenService, hashing
+from app.services.yggdrasil import hashing as PwdService, token as TokenService
+from app.services.util import hashing
 from app.support.helper import numeric_random
 
 

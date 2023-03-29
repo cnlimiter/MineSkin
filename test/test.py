@@ -1,13 +1,11 @@
 import datetime
 import json
-import uuid
 
 from app.http.deps import get_db
 from app.models.token import Token
 from app.models.user import User
 from app.schemas.texture import Texture, SkinInfo
-from app.services.auth import hashing
-from app.support.helper import convert_uuid_with_hyphen
+from app.services.util import hashing
 from app.support.response_json import YggdrasilResponse
 
 if __name__ == "__main__":
