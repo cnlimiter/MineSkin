@@ -1,6 +1,6 @@
 from peewee import AutoField, CharField, IntegerField, ForeignKeyField, BooleanField
 
-from app.models import user
+from app.models.user import User
 from app.models.base_model import BaseModel
 
 
@@ -13,7 +13,7 @@ class Skin(BaseModel):
     type = CharField(default='steve', null=False)
     hash = CharField(default='9b155b4668427669ca9ed3828024531bc52fca1dcf8fbde8ccac3d9d9b53e3cf')
     likes = IntegerField(default=0)
-    uploader = ForeignKeyField(user.User.user_id, backref='skins')
+    uploader = ForeignKeyField(User.user_id, backref='users')
     public = BooleanField(default=True)
 
     def is_alex(self):

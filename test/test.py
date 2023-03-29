@@ -7,6 +7,8 @@ from app.models.token import Token
 from app.models.user import User
 from app.schemas.texture import Texture, SkinInfo
 from app.services.auth import hashing
+from app.support.helper import convert_uuid_with_hyphen
+from app.support.response_json import YggdrasilResponse
 
 if __name__ == "__main__":
     get_db()
@@ -43,6 +45,7 @@ if __name__ == "__main__":
         }
     )
 
+
     # if tokens:
     #     print(True)
     # else:
@@ -50,7 +53,12 @@ if __name__ == "__main__":
     # for i in tokens:
     #     print(i.token_id)
     # print(base64.b64encode(data.__str__().encode('utf-8')))
-    print(len(uuid.uuid4().hex))
+
+    #print(convert_uuid_with_hyphen(uuid.uuid4().hex))
+
     # print(token.created_at.timestamp())
     # print(datetime.datetime.utcnow().timestamp()-user.created_at)
-    # for i in tokens:
+
+
+
+    print(YggdrasilResponse.success("test").render())

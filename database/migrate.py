@@ -1,6 +1,6 @@
 from peewee_migrate import Router
 
-from app.models import user, skin, player
+from app.models import user, skin
 from app.providers.database import db
 from config.app import settings as AppConfig
 
@@ -8,7 +8,6 @@ def gen():
     with db:
         router = Router(db)
         router.create("user", auto=user.User)
-        router.create("player", auto=player.Player)
         router.create("skin", auto=skin.Skin)
 
 

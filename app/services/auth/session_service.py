@@ -1,8 +1,9 @@
 from starlette.requests import Request
-from starlette.responses import JSONResponse
 
+from app.models.user import User
 from app.schemas.game import JoinRequest
-from app.services.auth.token import client_to_server_validate,server_to_client_validate
+from app.schemas.player import Player
+from app.services.auth.token import client_to_server_validate, server_to_client_validate
 from app.support.response_json import YggdrasilResponse
 
 
@@ -56,3 +57,29 @@ class HasJoined:
 
         # 操作成功，返回204
         return YggdrasilResponse.noContent()
+
+
+class Profile:
+    def __init__(self, uuid: str):
+        self.uuid = uuid
+
+    def respond(self):
+        uuid = self.uuid
+
+        # uuid格式错误，返回204
+        if not len(uuid) == 32:
+            return YggdrasilResponse.noContent()
+
+        # # 处理无符号uuid为有符号uuid
+        # t_uuid = convert_uuid_with_hyphen(uuid)
+
+        # 根据UUID获取玩家信息
+        user_data: User = User.get_or_none(User.uuid == uuid)
+        player = Player(id=user_data.uuid, name=user_data.uuid)
+
+        # 玩家不存在，返回204
+        if not user_data:
+            YggdrasilResponse.noContent()
+
+        # 操作成功，返回204
+        return player

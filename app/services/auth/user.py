@@ -1,6 +1,7 @@
 import base64
 import datetime
 
+from app.models.closet import Closet
 from app.models.skin import Skin
 from app.models.user import User
 from app.schemas.player import Player, Properties
@@ -9,7 +10,8 @@ from config.api import settings as ApiConfig
 
 
 def gen_user_profile(user_data: User, properties_contained: bool = True):
-    skin = Skin.get_or_none(Skin.uploader == user_data.user_id)
+    closet: Closet = Closet.get_or_none(Closet.user_id == user_data.user_id)
+    skin = Skin.get_by_id(Skin.skin_id == closet.skin_id)
     if properties_contained:
         texture_data = {
             'timestamp': datetime.datetime.now(),

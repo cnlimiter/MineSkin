@@ -19,13 +19,10 @@ class YggdrasilResponse:
         )
 
     @staticmethod
-    def success(error: str, message: str):
+    def success(data):
         return JSONResponse(
             status_code=200,
-            content={
-                'error': error,
-                'errorMessage': message
-            }
+            content=data
         )
 
     @staticmethod

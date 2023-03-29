@@ -14,6 +14,7 @@ from cryptography.hazmat.primitives.asymmetric import rsa
 from config.app import settings as AppConfig
 from config.auth import settings as AuthConfig
 
+
 def numeric_random(length: int = 16) -> str:
     """
     生成指定长度的字母和数字的随机字符串
@@ -74,3 +75,7 @@ def gen_signed_date(data: bytes):
     digest = SHA1.new()
     digest.update(data)
     return base64.b64encode(signer.sign(digest))
+
+
+def convert_uuid_with_hyphen(uuid: str):
+    return f"{uuid[:8]}-{uuid[8:12]}-{uuid[12:16]}-{uuid[16:20]}-{uuid[20:]}"

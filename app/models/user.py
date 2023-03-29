@@ -1,4 +1,4 @@
-from peewee import CharField, IntegerField, AutoField, UUIDField
+from peewee import CharField, IntegerField, AutoField, UUIDField, ForeignKeyField
 
 from app.models.base_model import BaseModel
 
