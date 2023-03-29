@@ -1,4 +1,5 @@
 import datetime
+import json
 
 from app.http.deps import get_db
 from app.models.token import Token
@@ -15,14 +16,24 @@ if __name__ == "__main__":
     result = hashing.verify_password('123456', user.password)
 
     now = datetime.datetime.now().timestamp()
+
+    data = {
+        'access_token': '1',
+        'selected_profile': '1',
+        'username': '1',
+        'ip': '1'
+    }
+    dump = json.dumps(data)
+
     # if tokens:
     #     print(True)
     # else:
     #     print(False)
     # for i in tokens:
     #     print(i.token_id)
-    print(now)
+    print(dump)
+    print(json.loads(dump))
 
-    print(token.created_at.timestamp())
-    #print(datetime.datetime.utcnow().timestamp()-user.created_at)
-    #for i in tokens:
+    # print(token.created_at.timestamp())
+    # print(datetime.datetime.utcnow().timestamp()-user.created_at)
+    # for i in tokens:

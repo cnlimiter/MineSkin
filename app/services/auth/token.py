@@ -1,14 +1,16 @@
 import datetime
+import json
 import uuid
 from typing import List
-
 
 from app.exceptions.exception import AuthenticationError
 from app.models.token import Token
 from app.models.user import User
 from app.providers.database import redis
 from app.schemas.auth import TokenBase
+from app.services.auth.user import gen_user_profile
 from config.auth import settings as AuthConfig
+
 
 def gen_access_token(username: str, client_token: str) -> str:
     user = User.get_or_none(User.username == username)
@@ -152,5 +154,27 @@ def client_to_server_validate(access_token: str, selected_profile: str, server_i
         "ip": ip
     }
 
-    return redis.set(f'server_id_{server_id}', data.__str__(), ex=15)
+    # 将授权信息储存至redis，15秒过期
+    return redis.set(f'server_id_{server_id}', json.dumps(data), ex=15)
 
+
+def server_to_client_validate(username: str, server_id: str, ip: str) -> bool | None:  # todo
+    # 根据serverId获取对应授权信息
+    response = redis.get(f'server_id_{server_id}')
+    # 未找到对应授权信息或发生错误
+    if not response:
+        return False
+    client_data: dict[str, str] = json.loads(response)
+
+    # 玩家名称与授权不对应
+    if not client_data.get('username') == username:
+        return False
+    # 若提供了客户端ip，则需要判断储存的客户端ip与其是否一致
+    if ip:
+        if not client_data.get('ip') == ip:
+            return False
+
+    # 根据accessToken获取玩家资料
+    user = search_user_by_access_token(client_data.get('access_token'))
+
+    return gen_user_profile(user_data=user)
