@@ -2,11 +2,13 @@ import datetime
 import uuid
 from typing import List
 
+
 from app.exceptions.exception import AuthenticationError
 from app.models.token import Token
 from app.models.user import User
+from app.providers.database import redis
 from app.schemas.auth import TokenBase
-
+from config.auth import settings as AuthConfig
 
 def gen_access_token(username: str, client_token: str) -> str:
     user = User.get_or_none(User.username == username)
@@ -123,13 +125,32 @@ def invalidate_all_access_token(username: str, password: str) -> bool:
         return False
 
 
-def client_to_server_validate(access_token: str, selected_profile: str, server_id: str, ip: str):
+def client_to_server_validate(access_token: str, selected_profile: str, server_id: str, ip: str) -> bool:
     token: Token = Token.get_or_none(Token.access_token == access_token)
     user: User = User.get_by_id(token.user_id)
 
     if not user:
         return False
 
-    if user.permission == 1:
+    # 令牌对应用户已被封禁
+    if user.permission == -1:
         return False
+
+    if not AuthConfig.EMAIL_IGNORE:
+        # 令牌对应用户未验证邮箱
+        if user.permission == 0:
+            return False
+
+    # 令牌对应玩家uuid不一致
+    if user.uuid != selected_profile:
+        return False
+
+    data = {
+        "access_token": access_token,
+        "selected_profile": selected_profile,
+        "username": user.username,
+        "ip": ip
+    }
+
+    return redis.set(f'server_id_{server_id}', data.__str__(), ex=15)
 

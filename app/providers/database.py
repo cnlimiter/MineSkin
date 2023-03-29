@@ -1,5 +1,19 @@
 from peewee import SqliteDatabase
+import redis
 
-from config.app import settings as app_config
+from config.app import settings as AppConfig
 
-db = SqliteDatabase(app_config.BASE_PATH + '\\test.db')
+from config.redis import settings as RedisConfig
+
+db = SqliteDatabase(AppConfig.BASE_PATH + '\\test.db')
+
+pool = redis.ConnectionPool(
+    host=RedisConfig.HOST,
+    port=RedisConfig.PORT,
+    db=RedisConfig.DB,
+    decode_responses=True
+)
+
+redis = redis.Redis(
+    connection_pool=pool
+)
