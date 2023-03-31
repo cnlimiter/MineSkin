@@ -3,11 +3,18 @@
 """
 
 
+class LoginError(Exception):
+    """
+    未认证
+    """
+    def __init__(self, message: str = ""):
+        self.message = message
+
+
 class InvalidToken(Exception):
     """
     未认证
     """
-
     def __init__(self, message: str = "Invalid token."):
         self.type = 'ForbiddenOperationException'
         self.message = message

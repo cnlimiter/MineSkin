@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 
-from app.http.deps import get_db
+from app.http.deps import get_db, get_current_user
 from app.schemas.auth import AuthRequest, AuthResponse, RefreshRequest, RefreshResponse, TokenBase, AuthBase
 from app.services.yggdrasil.auth_service import Password, Refresh, Validate, InValidate, SignOut
 
@@ -9,7 +9,7 @@ router = APIRouter(
 )
 
 
-@router.post("/authenticate", response_model=AuthResponse, dependencies=[Depends(get_db)])
+@router.post("/authenticate", response_model=AuthResponse, dependencies=[Depends(get_db), Depends(get_current_user)])
 async def authenticate(request_data: AuthRequest = Depends()):
     """
     使用密码进行身份验证，并分配一个新的令牌。
@@ -18,7 +18,7 @@ async def authenticate(request_data: AuthRequest = Depends()):
     return r.respond()
 
 
-@router.post("/refresh", response_model=RefreshResponse, dependencies=[Depends(get_db)])
+@router.post("/refresh", response_model=RefreshResponse, dependencies=[Depends(get_db), Depends(get_current_user)])
 async def refresh(request_data: RefreshRequest):
     """
     吊销原令牌，并颁发一个新的令牌。
@@ -27,7 +27,7 @@ async def refresh(request_data: RefreshRequest):
     return r.respond()
 
 
-@router.post("/validate", dependencies=[Depends(get_db)])
+@router.post("/validate", dependencies=[Depends(get_db), Depends(get_current_user)])
 async def validate(request_data: TokenBase):
     """
     检验令牌是否有效。
@@ -36,7 +36,7 @@ async def validate(request_data: TokenBase):
     return r.respond()
 
 
-@router.post("/invalidate", dependencies=[Depends(get_db)])
+@router.post("/invalidate", dependencies=[Depends(get_db), Depends(get_current_user)])
 async def invalidate(access_token: str):
     """
     检验令牌是否有效。
@@ -45,7 +45,7 @@ async def invalidate(access_token: str):
     return r.respond()
 
 
-@router.post("/signout", dependencies=[Depends(get_db)])
+@router.post("/signout", dependencies=[Depends(get_db), Depends(get_current_user)])
 async def signout(request_data: AuthBase):
     """
     吊销用户的所有令牌。

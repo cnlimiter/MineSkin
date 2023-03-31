@@ -3,7 +3,7 @@ import json
 import uuid
 from typing import List
 
-from app.exceptions.exception import AuthenticationError
+from app.exceptions.exception import Forbidden
 from app.models.token import Token
 from app.models.user import User
 from app.providers.database import redis
@@ -31,7 +31,7 @@ def gen_access_token(username: str, client_token: str) -> str:
         Token.create(user_id=user.user_id, client_token=new_token.client_token, access_token=new_token.access_token)
         return new_token.access_token
     else:
-        raise AuthenticationError(message="用户已封禁或不存在")
+        raise Forbidden(message="用户已封禁或不存在")
 
 
 def search_user_by_access_token(access_token: str) -> User:
@@ -65,7 +65,7 @@ def refresh_access_token(access_token: str, client_token: str):
             }
 
         else:
-            raise AuthenticationError(message='用户已封禁或不存在')
+            raise Forbidden(message='用户已封禁或不存在')
 
 
 def validate_access_token(access_token: str, client_token: str) -> bool:

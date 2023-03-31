@@ -2,12 +2,23 @@ from fastapi.exception_handlers import request_validation_exception_handler, htt
 from fastapi.exceptions import RequestValidationError
 from starlette.responses import JSONResponse
 
-from app.exceptions.exception import InvalidToken, InvalidCredentials, NoContent, Forbidden
+from app.exceptions.exception import InvalidToken, InvalidCredentials, NoContent, Forbidden, LoginError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from fastapi import Request
 
 
 def register(app):
+    @app.exception_handler(LoginError)
+    async def invalidToken(request: Request, e: LoginError):
+        """
+        认证异常处理
+        """
+        return JSONResponse(content={
+            "code": -1,
+            "msg": e.message
+        })
+
+
     @app.exception_handler(InvalidToken)
     async def invalidToken(request: Request, e: InvalidToken):
         """
@@ -19,14 +30,14 @@ def register(app):
         })
 
     @app.exception_handler(NoContent)
-    async def authorization_exception_handler(request: Request, e: NoContent):
+    async def noContent(request: Request):
         """
         权限异常处理
         """
         return JSONResponse(status_code=204, content={})
 
     @app.exception_handler(Forbidden)
-    async def exist_exception_handler(request: Request, e: Forbidden):
+    async def forbidden(request: Request, e: Forbidden):
         """
         重复异常处理
         """
@@ -36,7 +47,7 @@ def register(app):
         })
 
     @app.exception_handler(InvalidCredentials)
-    async def exist_exception_handler(request: Request, e: InvalidCredentials):
+    async def invalidCredentials(request: Request, e: InvalidCredentials):
         """
         重复异常处理
         """
