@@ -7,7 +7,7 @@ from app.schemas.player import Player
 from app.services.yggdrasil.session_service import Join, HasJoined, Profile
 
 router = APIRouter(
-    prefix="/yggdrasil/sessionserver/session/minecraft"
+    prefix="/sessionserver/session/minecraft"
 )
 
 
@@ -20,7 +20,7 @@ async def join(request: Request, request_data: JoinRequest = Depends()):
     return r.respond()
 
 
-@router.get("/hasJoined/", dependencies=[Depends(get_db)])
+@router.get("/hasJoined", dependencies=[Depends(get_db)])
 async def hasJoined(username: str, serverId: str, ip: str):
     """
     客户端进入服务器。

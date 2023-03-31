@@ -5,7 +5,7 @@ from app.schemas.auth import AuthRequest, AuthResponse, RefreshRequest, RefreshR
 from app.services.yggdrasil.auth_service import Password, Refresh, Validate, InValidate, SignOut
 
 router = APIRouter(
-    prefix="/yggdrasil/authserver"
+    prefix="/authserver"
 )
 
 

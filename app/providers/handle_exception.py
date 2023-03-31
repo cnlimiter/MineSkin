@@ -2,49 +2,46 @@ from fastapi.exception_handlers import request_validation_exception_handler, htt
 from fastapi.exceptions import RequestValidationError
 from starlette.responses import JSONResponse
 
-from app.exceptions.exception import AuthenticationError, ForbiddenError, InvalidTokenError, InvalidCredentialsError
+from app.exceptions.exception import InvalidToken, InvalidCredentials, NoContent, Forbidden
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from fastapi import Request
 
 
 def register(app):
-    @app.exception_handler(AuthenticationError)
-    async def authentication_exception_handler(request: Request, e: AuthenticationError):
+    @app.exception_handler(InvalidToken)
+    async def invalidToken(request: Request, e: InvalidToken):
         """
         认证异常处理
         """
-        return JSONResponse(status_code=401, content={
-            "error": e,
+        return JSONResponse(status_code=403, content={
+            "error": e.type,
             "errorMessage": e.message
         })
 
-    @app.exception_handler(ForbiddenError)
-    async def authorization_exception_handler(request: Request, e: ForbiddenError):
+    @app.exception_handler(NoContent)
+    async def authorization_exception_handler(request: Request, e: NoContent):
         """
         权限异常处理
         """
-        return JSONResponse(status_code=403, content={
-            "error": 'ForbiddenOperationException',
-            "errorMessage": e.message
-        })
+        return JSONResponse(status_code=204, content={})
 
-    @app.exception_handler(InvalidTokenError)
-    async def exist_exception_handler(request: Request, e: InvalidTokenError):
+    @app.exception_handler(Forbidden)
+    async def exist_exception_handler(request: Request, e: Forbidden):
         """
         重复异常处理
         """
         return JSONResponse(status_code=403, content={
-            "error": 'ForbiddenOperationException',
+            "error": e.type,
             "errorMessage": e.message
         })
 
-    @app.exception_handler(InvalidCredentialsError)
-    async def exist_exception_handler(request: Request, e: InvalidCredentialsError):
+    @app.exception_handler(InvalidCredentials)
+    async def exist_exception_handler(request: Request, e: InvalidCredentials):
         """
         重复异常处理
         """
         return JSONResponse(status_code=403, content={
-            "error": 'ForbiddenOperationException',
+            "error": e.type,
             "errorMessage": e.message
         })
 

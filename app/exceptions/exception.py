@@ -3,46 +3,37 @@
 """
 
 
-class AuthenticationError(Exception):
+class InvalidToken(Exception):
     """
     未认证
     """
 
-    def __init__(self, message: str = "Unauthorized"):
-        self.message = message
-
-
-class ForbiddenError(Exception):
-    """
-    未授权
-    """
-
-    def __init__(self, message: str = "Forbidden"):
-        self.message = message
-
-
-class InvalidTokenError(Exception):
-    """
-    未授权
-    """
-
     def __init__(self, message: str = "Invalid token."):
+        self.type = 'ForbiddenOperationException'
         self.message = message
 
 
-class InvalidCredentialsError(Exception):
+class NoContent(Exception):
     """
     未授权
     """
 
-    def __init__(self, message: str = "Invalid credentials. Invalid username or password."):
+
+class Forbidden(Exception):
+    """
+    未授权
+    """
+
+    def __init__(self, message: str):
+        self.type = 'ForbiddenOperationException'
         self.message = message
 
 
-class ExistError(Exception):
+class InvalidCredentials(Exception):
     """
     已经出现
     """
 
-    def __init__(self, message: str = "Exist"):
+    def __init__(self, message: str = "Invalid credentials. Invalid username or password."):
+        self.type = 'ForbiddenOperationException'
         self.message = message

@@ -2,10 +2,9 @@ import logging
 
 from fastapi import FastAPI
 
-from app.providers import app_provider
-from app.providers import logging_provider
+from app.providers import app_provider, route_provider
 from app.providers import handle_exception
-from app.providers import route_provider
+from app.providers import logging_provider
 
 
 def create_app() -> FastAPI:
@@ -16,6 +15,7 @@ def create_app() -> FastAPI:
     register(app, app_provider)
     register(app, logging_provider)
     register(app, handle_exception)
+
 
     boot(app, route_provider)
 

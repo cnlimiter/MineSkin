@@ -4,7 +4,7 @@ from app.support.helper import load_key
 from config.api import settings as api_config
 
 router = APIRouter(
-    prefix="/yggdrasil"
+
 )
 
 
