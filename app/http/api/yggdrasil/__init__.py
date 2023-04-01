@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from app.support.helper import load_key
+from app.support.key_helper import load_key
 from config.api import settings as api_config
 
 router = APIRouter(

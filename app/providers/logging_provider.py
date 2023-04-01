@@ -6,9 +6,9 @@ from config.logging import settings
 
 
 def register(app=None):
-    level = settings.LOG_LEVEL
-    path = settings.LOG_PATH
-    retention = settings.LOG_RETENTION
+    level = settings.LEVEL
+    path = settings.PATH
+    retention = settings.RETENTION
 
     # intercept everything at the root logger
     logging.root.handlers = [InterceptHandler()]

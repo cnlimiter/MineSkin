@@ -6,9 +6,8 @@ from app.schemas.auth import AuthRequest, AuthResponse, RefreshRequest, RefreshR
 from app.schemas.player import Player as PlayerRes, Player
 from app.schemas.user import User as UserRes
 from app.services.yggdrasil import token as TokenService
-from app.services.util import hashing as PwdService
-from app.services.util import hashing
-from app.support.helper import numeric_random
+from app.support import hashing as PwdService, hashing
+from app.support.key_helper import numeric_random
 
 
 class Password:

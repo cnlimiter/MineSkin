@@ -34,9 +34,6 @@ class TokenBase(Base):
     access_token: str
     client_token: str
 
-    class Config:
-        orm_mode = True
-
 
 class TokenData(Base):
     username: Union[str, None] = None

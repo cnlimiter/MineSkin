@@ -5,8 +5,8 @@ from app.http.deps import get_db
 from app.models.token import Token
 from app.models.user import User
 from app.schemas.texture import Texture, SkinInfo
-from app.services.util import hashing
-from app.support.response_json import YggdrasilResponse
+from app.support import hashing
+from app.support.response_helper import YggdrasilResponse
 
 if __name__ == "__main__":
     get_db()

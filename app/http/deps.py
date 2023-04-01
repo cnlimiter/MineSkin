@@ -5,8 +5,8 @@ from starlette import status
 
 from app.models.user import User
 from app.providers import database
-from app.services.util.hashing import verify_password
-from app.services.util.jwt_helper import get_payload_by_token
+from app.support.hashing import verify_password
+from app.support.jwt_helper import get_payload_by_token
 
 oauth2_token_schema = OAuth2PasswordBearer(
     tokenUrl="/login/"

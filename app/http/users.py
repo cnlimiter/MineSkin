@@ -9,8 +9,7 @@ from app.exceptions.exception import LoginError
 from app.http.deps import get_db, authenticate_user, get_current_user
 from app.models.user import User
 from app.schemas.auth import LoginToken
-from app.services.util.hashing import verify_password
-from app.services.util.jwt_helper import create_access_token
+from app.support.jwt_helper import create_access_token
 from config.jwt import settings as JWTConfig
 
 router = APIRouter(
