@@ -1,7 +1,7 @@
 from peewee import AutoField, CharField, ForeignKeyField, IntegerField
 
 from app.models import user
-from app.models.base_model import BaseModel
+from app.models.base import BaseModel
 
 
 class Token(BaseModel):

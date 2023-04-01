@@ -2,7 +2,7 @@ from fastapi import APIRouter
 
 from app.http.api import yggdrasil
 from app.http.api.yggdrasil import authserver, sessionserver
-from app.http import users
+from app.http.common import users
 
 yggdrasil_router = APIRouter()
 

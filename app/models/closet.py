@@ -1,6 +1,6 @@
 from peewee import ForeignKeyField
 
-from app.models.base_model import BaseModel
+from app.models.base import BaseModel
 from app.models.skin import Skin
 from app.models.user import User
 

@@ -1,7 +1,7 @@
 from peewee import AutoField, CharField, IntegerField, ForeignKeyField, BooleanField
 
 from app.models.user import User
-from app.models.base_model import BaseModel
+from app.models.base import BaseModel
 
 
 class Skin(BaseModel):
