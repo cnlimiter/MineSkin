@@ -3,10 +3,12 @@ import json
 import uuid
 from typing import List
 
-from app.exceptions.exception import Forbidden
+from aioredis import Redis
+from starlette.requests import Request
+
+from app.core.Exception import Forbidden
 from app.models.token import Token
 from app.models.user import User
-from app.providers.database import redis
 from app.schemas.auth import TokenBase
 from app.schemas.player import Player
 from app.services.yggdrasil.user_profile import gen_user_profile
@@ -128,7 +130,8 @@ def invalidate_all_access_token(username: str, password: str) -> bool:
         return False
 
 
-def client_to_server_validate(access_token: str, selected_profile: str, server_id: str, ip: str) -> bool:
+def client_to_server_validate(req: Request, access_token: str, selected_profile: str, server_id: str, ip: str) -> bool:
+    redis: Redis = req.app.state.code_cache
     token: Token = Token.get_or_none(Token.access_token == access_token)
     user: User = User.get_by_id(token.user_id)
 
@@ -156,12 +159,13 @@ def client_to_server_validate(access_token: str, selected_profile: str, server_i
     }
 
     # 将授权信息储存至redis，15秒过期
-    return redis.set(f'server_id_{server_id}', json.dumps(data), ex=15)
+    return await redis.set(f'server_id_{server_id}', json.dumps(data), ex=15)
 
 
-def server_to_client_validate(username: str, server_id: str, ip: str) -> bool | Player:
+def server_to_client_validate(req: Request, username: str, server_id: str, ip: str) -> bool | Player:
+    redis: Redis = req.app.state.code_cache
     # 根据serverId获取对应授权信息
-    response = redis.get(f'server_id_{server_id}')
+    response = await redis.get(f'server_id_{server_id}')
     # 未找到对应授权信息或发生错误
     if not response:
         return False

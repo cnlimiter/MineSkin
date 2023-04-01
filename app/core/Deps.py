@@ -4,9 +4,9 @@ from jose import JWTError
 from starlette import status
 
 from app.models.user import User
-from app.providers import database
-from app.support.hashing import verify_password
-from app.support.jwt_helper import get_payload_by_token
+from app.core.DataBase import db
+from app.utils.hashing import verify_password
+from app.core.Auth import get_payload_by_token
 
 oauth2_token_schema = OAuth2PasswordBearer(
     tokenUrl="/login/"
@@ -15,20 +15,12 @@ oauth2_token_schema = OAuth2PasswordBearer(
 
 def get_db():
     try:
-        database.db.connect()
+        db.connect()
         yield
     finally:
-        if not database.db.is_closed():
-            database.db.close()
+        if not db.is_closed():
+            db.close()
 
-
-def authenticate_user(username: str, password: str):
-    user = User.get_or_none(User.username == username)
-    if not user:
-        return None
-    if not verify_password(password, user.password):
-        return None
-    return user
 
 
 async def get_current_user(token: str = Depends(oauth2_token_schema)):

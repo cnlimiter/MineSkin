@@ -5,7 +5,7 @@ from app.models.closet import Closet
 from app.models.skin import Skin
 from app.models.user import User
 from app.schemas.player import Player, Properties
-from app.support.key_helper import gen_signed_date
+from app.utils.key_helper import gen_signed_date
 from config.api import settings as ApiConfig
 
 

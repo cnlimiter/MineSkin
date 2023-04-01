@@ -1,13 +1,13 @@
 from starlette.responses import JSONResponse
 
-from app.exceptions.exception import InvalidCredentials, InvalidToken
+from app.core.Exception import InvalidCredentials, InvalidToken
 from app.models.user import User
 from app.schemas.auth import AuthRequest, AuthResponse, RefreshRequest, RefreshResponse, TokenBase, AuthBase
 from app.schemas.player import Player as PlayerRes, Player
 from app.schemas.user import User as UserRes
-from app.services.yggdrasil import token as TokenService
-from app.support import hashing as PwdService, hashing
-from app.support.key_helper import numeric_random
+from app.services.yggdrasil import auth_token as TokenService
+from app.utils import hashing as PwdService, hashing
+from app.utils.key_helper import numeric_random
 
 
 class Password:

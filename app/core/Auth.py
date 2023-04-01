@@ -3,6 +3,8 @@ from typing import Any, Union
 
 from jose import jwt
 
+from app.models.user import User
+from app.utils.hashing import verify_password
 from config.jwt import settings as JWTConfig
 
 
@@ -27,3 +29,11 @@ def create_access_token(
 
 def get_payload_by_token(encoded_jwt):
     return jwt.decode(encoded_jwt, JWTConfig.SECRET_KEY, algorithms=JWTConfig.ALGORITHM)
+
+def authenticate_user(username: str, password: str):
+    user = User.get_or_none(User.username == username)
+    if not user:
+        return None
+    if not verify_password(password, user.password):
+        return None
+    return user

@@ -1,8 +1,7 @@
 import logging
 
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.schedulers.blocking import BlockingScheduler
-from app.providers import logging_provider
+from app.core import Logging
 from app.jobs.demo_job import demo_job
 
 

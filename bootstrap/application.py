@@ -2,9 +2,7 @@ import logging
 
 from fastapi import FastAPI
 
-from app.providers import app_provider, route_provider
-from app.providers import handle_exception
-from app.providers import logging_provider
+from app.core import Event, Router, Exception, Logging
 
 
 def create_app() -> FastAPI:
@@ -12,12 +10,11 @@ def create_app() -> FastAPI:
 
     app = FastAPI()
 
-    register(app, app_provider)
-    register(app, logging_provider)
-    register(app, handle_exception)
+    register(app, Event)
+    register(app, Logging)
+    register(app, Exception)
 
-
-    boot(app, route_provider)
+    boot(app, Router)
 
     return app
 

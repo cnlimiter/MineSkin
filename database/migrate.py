@@ -1,7 +1,7 @@
 from peewee_migrate import Router
 
 from app.models import user, skin
-from app.providers.database import db
+from app.core.DataBase import db
 from config.app import settings as AppConfig
 
 def gen():

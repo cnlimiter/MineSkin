@@ -1,8 +1,9 @@
 from fastapi import APIRouter
 
-from app.http.api import yggdrasil
-from app.http.api.yggdrasil import authserver, sessionserver
-from app.http.common import users
+from app.http.controller.api.yggdrasil import authserver
+from app.http.controller.api.yggdrasil import sessionserver
+from app.http.controller.common import users
+from app.http.controller.api import yggdrasil
 
 yggdrasil_router = APIRouter()
 

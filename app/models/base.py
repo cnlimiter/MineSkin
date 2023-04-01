@@ -3,7 +3,7 @@ import datetime
 from peewee import DateTimeField, Model, SQL
 from playhouse.shortcuts import ThreadSafeDatabaseMetadata
 
-from app.providers.database import db
+from app.core.DataBase import db
 
 
 class BaseModel(Model):

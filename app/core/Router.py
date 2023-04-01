@@ -1,4 +1,4 @@
-from routes.api import api_router, yggdrasil_router
+from app.http.api import api_router, yggdrasil_router
 
 
 def boot(app):

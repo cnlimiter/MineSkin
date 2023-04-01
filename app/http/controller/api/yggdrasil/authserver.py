@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 
-from app.http.deps import get_db, get_current_user
+from app.core.Deps import get_db, get_current_user
 from app.schemas.auth import AuthRequest, AuthResponse, RefreshRequest, RefreshResponse, TokenBase, AuthBase
 from app.services.yggdrasil.auth_service import Password, Refresh, Validate, InValidate, SignOut
 
