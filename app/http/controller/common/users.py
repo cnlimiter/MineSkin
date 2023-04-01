@@ -50,29 +50,29 @@ def login_getinfo(
     return JSONResponse(content=data, status_code=status.HTTP_200_OK)
 
 
-@router.put("/avatar/upload", dependencies=[Security(check_permissions)], summary="头像修改")
-async def avatar_upload(req: Request, avatar: UploadFile = File(...)):
-    """
-    头像上传
-    :param req:
-    :param avatar:
-    :return:
-    """
-    # 文件存储路径
-    path = f"{settings.STATIC_DIR}/upload/avatar"
-    start = time.time()
-    filename = random_str() + '.' + avatar.filename.split(".")[1]
-    try:
-        if not os.path.isdir(path):
-            os.makedirs(path, 0o777)
-        res = await avatar.read()
-        with open(f"{path}/{filename}", "wb") as f:
-            f.write(res)
-        await User.filter(id=req.state.user_id).update(header_img=f"/upload/avatar/{filename}")
-        data = {
-            'time': time.time() - start,
-            'url': f"/upload/avatar/{filename}"}
-        return success(msg="更新头像成功", data=data)
-    except Exception as e:
-        print("头像上传失败:", e)
-        return fail(msg=f"{avatar.filename}上传失败!")
+# @router.put("/avatar/upload", dependencies=[Security(check_permissions)], summary="头像修改")
+# async def avatar_upload(req: Request, avatar: UploadFile = File(...)):
+#     """
+#     头像上传
+#     :param req:
+#     :param avatar:
+#     :return:
+#     """
+#     # 文件存储路径
+#     path = f"{settings.STATIC_DIR}/upload/avatar"
+#     start = time.time()
+#     filename = random_str() + '.' + avatar.filename.split(".")[1]
+#     try:
+#         if not os.path.isdir(path):
+#             os.makedirs(path, 0o777)
+#         res = await avatar.read()
+#         with open(f"{path}/{filename}", "wb") as f:
+#             f.write(res)
+#         await User.filter(id=req.state.user_id).update(header_img=f"/upload/avatar/{filename}")
+#         data = {
+#             'time': time.time() - start,
+#             'url': f"/upload/avatar/{filename}"}
+#         return success(msg="更新头像成功", data=data)
+#     except Exception as e:
+#         print("头像上传失败:", e)
+#         return fail(msg=f"{avatar.filename}上传失败!")

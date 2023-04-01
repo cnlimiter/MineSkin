@@ -3,7 +3,7 @@ import json
 import uuid
 from typing import List
 
-from aioredis import Redis
+from redis.client import Redis
 from starlette.requests import Request
 
 from app.core.Exception import Forbidden
@@ -159,13 +159,13 @@ def client_to_server_validate(req: Request, access_token: str, selected_profile:
     }
 
     # 将授权信息储存至redis，15秒过期
-    return await redis.set(f'server_id_{server_id}', json.dumps(data), ex=15)
+    return redis.set(f'server_id_{server_id}', json.dumps(data), ex=15)
 
 
 def server_to_client_validate(req: Request, username: str, server_id: str, ip: str) -> bool | Player:
     redis: Redis = req.app.state.code_cache
     # 根据serverId获取对应授权信息
-    response = await redis.get(f'server_id_{server_id}')
+    response = redis.get(f'server_id_{server_id}')
     # 未找到对应授权信息或发生错误
     if not response:
         return False

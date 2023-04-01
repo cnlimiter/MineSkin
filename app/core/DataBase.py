@@ -1,6 +1,6 @@
+import redis
 from peewee import SqliteDatabase
-from aioredis import Redis
-import aioredis
+from redis.client import Redis
 
 from config.app import settings as AppConfig
 
@@ -9,12 +9,12 @@ from config.redis import settings as RedisConfig
 db = SqliteDatabase(AppConfig.BASE_PATH + '\\test.db')
 
 
-async def sys_cache() -> Redis:
+def sys_cache() -> Redis:
     """
         系统缓存
         :return: cache 连接池
     """
-    pool = aioredis.ConnectionPool(
+    pool = redis.ConnectionPool(
         host=RedisConfig.HOST,
         port=RedisConfig.PORT,
         db=0,
@@ -30,7 +30,7 @@ async def code_cache() -> Redis:
         系统缓存
         :return: cache 连接池
     """
-    pool = aioredis.ConnectionPool(
+    pool = redis.ConnectionPool(
         host=RedisConfig.HOST,
         port=RedisConfig.PORT,
         db=1,
